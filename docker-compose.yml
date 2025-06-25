@@ -1,0 +1,32 @@
+
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "5000:5000"
+    volumes:
+        - ./auth-service/db:/app/db
+
+  product-service:
+    build: ./product-service
+    ports:
+      - "5001:5000"
+
+  transaction-service:
+    build:
+      context: ./transaction-service
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./transaction-service:/app
+    depends_on:
+      - product-service
+
+  
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+
+# volumes:
+#   auth_db:
