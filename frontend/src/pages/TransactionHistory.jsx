@@ -6,17 +6,18 @@ import { FaArrowLeft, FaHistory } from 'react-icons/fa';
 const TransactionHistory = ({ username }) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const transactionURL = process.env.REACT_APP_TRANSACTION_URL;
 
   useEffect(() => {
-    axios.get(`http://localhost:5002/transactions/${username}`)
+    axios.get(`${transactionURL}/transactions/${username}`)
       .then(res => setData(res.data))
-      .catch(err => console.error(err));
-  }, [username]);
+      .catch(err => console.error('Gagal ambil transaksi:', err));
+  }, [username, transactionURL]);
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        
+
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">

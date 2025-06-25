@@ -12,6 +12,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(basedir, 'db', 'transactions.db')}"
 db = SQLAlchemy(app)
 
+# Ambil URL product service dari environment variable
+PRODUCT_SERVICE_URL = os.environ.get("PRODUCT_SERVICE_URL", "http://localhost:5001")  # default ke lokal jika belum diset
+
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
@@ -23,7 +26,6 @@ class Transaction(db.Model):
 with app.app_context():
     db.create_all()
 
-# Endpoint untuk menambahkan transaksi
 @app.route('/transactions', methods=['POST'])
 def create_transaction():
     data = request.json
@@ -32,12 +34,12 @@ def create_transaction():
     qty = data['qty']
     total = data['total']
 
-    # Kurangi stok di product-service
+    # Kurangi stok
     try:
-        reduce_url = f"http://product-service:5000/products/{product_id}/reduce"
+        reduce_url = f"{PRODUCT_SERVICE_URL}/products/{product_id}/reduce"
         res = requests.put(reduce_url, json={"qty": qty})
         if res.status_code != 200:
-            return jsonify({"status": "failed", "message": "Gagal kurangi stok", "detail": res.json()}), 400
+            return jsonify({"status": "failed", "message": "Gagal kurangi stok", "detail": res.text}), 400
     except Exception as e:
         return jsonify({"status": "error", "message": "Product service tidak bisa diakses", "error": str(e)}), 500
 
@@ -48,7 +50,6 @@ def create_transaction():
 
     return jsonify({"status": "success", "transaction_id": t.id})
 
-# Endpoint lihat semua transaksi (admin)
 @app.route('/transactions', methods=['GET'])
 def get_all():
     return jsonify([{
@@ -67,9 +68,8 @@ def get_transactions_by_user(username):
         'product_id': t.product_id,
         'qty': t.qty,
         'total': t.total,
-        'timestamp': t.timestamp.isoformat()  # pastikan ada kolom ini
+        'timestamp': t.timestamp.isoformat()
     } for t in transaksi])
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

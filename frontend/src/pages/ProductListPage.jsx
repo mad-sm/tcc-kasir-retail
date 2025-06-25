@@ -6,9 +6,10 @@ import { FaTrash, FaEdit, FaPlus, FaArrowLeft } from 'react-icons/fa';
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+  const productURL = process.env.REACT_APP_PRODUCT_URL;
 
   const fetchProducts = () => {
-    axios.get('http://localhost:5001/products')
+    axios.get(`${productURL}/products`)
       .then(res => setProducts(res.data))
       .catch(err => alert('Gagal memuat produk: ' + err.message));
   };
@@ -22,7 +23,7 @@ const ProductListPage = () => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`http://localhost:5001/products/${kode}`);
+      await axios.delete(`${productURL}/products/${kode}`);
       alert('Produk berhasil dihapus');
       fetchProducts(); // refresh data
     } catch (err) {

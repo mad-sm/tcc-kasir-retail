@@ -5,13 +5,15 @@ const EditProductPage = () => {
   const [kode, setKode] = useState('');
   const [harga, setHarga] = useState('');
   const [stok, setStok] = useState('');
+  const baseUrl = process.env.REACT_APP_PRODUCT_URL;
+
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(`http://localhost:5001/products/${kode}`, {
+      const res = await axios.put(`${baseUrl}/products/${kode}`, {
         price: parseInt(harga),
         stock: parseInt(stok)
-      });
+      });      
 
       if (res.data.status === 'updated') {
         alert('✅ Produk berhasil diperbarui');

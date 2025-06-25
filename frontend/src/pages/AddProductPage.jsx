@@ -10,6 +10,8 @@ const AddProductPage = () => {
   const [stock, setStock] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const baseUrl = process.env.REACT_APP_PRODUCT_URL;
+
 
   const handleSubmit = async () => {
     if (!kode || !name || !price || !stock) {
@@ -24,12 +26,12 @@ const AddProductPage = () => {
 
     try {
       setLoading(true);
-      const res = await axios.post('http://localhost:5001/products', {
+      const res = await axios.post(`${baseUrl}/products`, {
         kode,
         name,
         price: parseInt(price),
         stock: parseInt(stock)
-      });
+      });      
 
       if (res.data.status === 'success') {
         alert('✅ Produk berhasil ditambahkan');

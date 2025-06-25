@@ -5,10 +5,12 @@ const AddUserPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('kasir');
+  const baseUrl = process.env.REACT_APP_AUTH_URL;
+
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/register', {
+      const res = await axios.post(`${baseUrl}/register`, {
         username, password, role
       }, {
         headers: {
@@ -16,7 +18,7 @@ const AddUserPage = () => {
           'Role': 'admin',
           'Content-Type': 'application/json'
         }
-      });
+      });      
       alert(res.data.status === 'success' ? 'User berhasil ditambahkan' : 'Gagal');
     } catch (err) {
       alert('Error: ' + (err.response?.data?.status || err.message));

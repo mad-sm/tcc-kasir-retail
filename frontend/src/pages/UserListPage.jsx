@@ -6,14 +6,15 @@ const UserListPage = () => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
+  const authURL = process.env.REACT_APP_AUTH_URL;
 
   useEffect(() => {
-    axios.get('http://localhost:5000/users')
+    axios.get(`${authURL}/users`)
       .then(res => setUsers(res.data))
       .catch(err => {
         alert('Gagal memuat user: ' + err.message);
       });
-  }, []);
+  }, [authURL]);
 
   const filteredUsers = users.filter(user =>
     user.username.toLowerCase().includes(search.toLowerCase())

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaCashRegister, FaSignOutAlt, FaHistory, FaPlus, FaTrash } from 'react-icons/fa';
@@ -9,9 +9,13 @@ const KasirPage = () => {
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
 
+  // Gunakan ENV dari Cloud Run
+  const productURL = process.env.REACT_APP_PRODUCT_URL;
+  const transactionURL = process.env.REACT_APP_TRANSACTION_URL;
+
   const handleAddProduct = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/products`);
+      const res = await axios.get(`${productURL}/products`);
       const produk = res.data.find(p => p.kode === kode);
       if (!produk) return alert('Produk tidak ditemukan');
 
@@ -29,7 +33,7 @@ const KasirPage = () => {
 
   const handleCheckout = async () => {
     try {
-      const res = await axios.get(`http://localhost:5001/products`);
+      const res = await axios.get(`${productURL}/products`);
       const allProducts = res.data;
 
       for (let item of cart) {
@@ -45,14 +49,14 @@ const KasirPage = () => {
       }
 
       for (let item of cart) {
-        await axios.post(`http://localhost:5002/transactions`, {
+        await axios.post(`${transactionURL}/transactions`, {
           product_id: item.id,
           qty: item.qty,
           total: item.qty * item.price,
           username
         });
 
-        await axios.put(`http://localhost:5001/products/${item.id}/reduce`, {
+        await axios.put(`${productURL}/products/${item.id}/reduce`, {
           qty: item.qty
         });
       }
@@ -84,7 +88,6 @@ const KasirPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
           <FaCashRegister size={32} className="text-blue-600" />
@@ -102,7 +105,6 @@ const KasirPage = () => {
         </button>
       </div>
 
-      {/* Input Produk */}
       <div className="flex gap-2 mb-6">
         <input
           value={kode}
@@ -118,7 +120,6 @@ const KasirPage = () => {
         </button>
       </div>
 
-      {/* Tabel Keranjang */}
       <div className="overflow-x-auto rounded-lg border border-gray-200 shadow">
         <table className="min-w-full bg-white text-sm text-gray-700">
           <thead className="bg-gray-100 text-left">
@@ -161,7 +162,6 @@ const KasirPage = () => {
         </table>
       </div>
 
-      {/* Total Harga */}
       <div className="text-right mt-4">
         <h3 className="text-lg font-semibold">
           Total Harga:{' '}
@@ -171,7 +171,6 @@ const KasirPage = () => {
         </h3>
       </div>
 
-      {/* Aksi */}
       <div className="flex justify-between mt-6">
         <button
           onClick={() => navigate('/kasir/riwayat')}

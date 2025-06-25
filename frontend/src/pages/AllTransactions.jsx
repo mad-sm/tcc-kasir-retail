@@ -6,9 +6,11 @@ import { FaArrowLeft, FaClipboardList } from 'react-icons/fa';
 const AllTransactions = () => {
   const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
+  const baseUrl = process.env.REACT_APP_TRANSACTION_URL;
+
 
   useEffect(() => {
-    axios.get('http://localhost:5002/transactions')
+    axios.get(`${baseUrl}/transactions`)
       .then(res => setTransactions(res.data))
       .catch(err => {
         console.error('Gagal ambil data transaksi:', err);

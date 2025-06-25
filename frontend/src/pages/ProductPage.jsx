@@ -3,12 +3,16 @@ import axios from 'axios';
 
 const ProductPage = ({ onAddToCart, cart }) => {
   const [products, setProducts] = useState([]);
+  const productURL = process.env.REACT_APP_PRODUCT_URL;
 
   useEffect(() => {
-    axios.get('http://localhost:5001/products').then(res => {
-      setProducts(res.data);
-    });
-  }, []);
+    axios.get(`${productURL}/products`)
+      .then(res => setProducts(res.data))
+      .catch(err => {
+        console.error("Gagal mengambil produk:", err);
+        alert("Gagal mengambil data produk");
+      });
+  }, [productURL]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">

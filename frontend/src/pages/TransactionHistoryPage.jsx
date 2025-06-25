@@ -7,11 +7,12 @@ const TransactionHistoryPage = () => {
   const [transactions, setTransactions] = useState([]);
   const username = localStorage.getItem('username');
   const navigate = useNavigate();
+  const transactionURL = process.env.REACT_APP_TRANSACTION_URL;
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await axios.get(`http://localhost:5002/transactions/${username}`);
+        const res = await axios.get(`${transactionURL}/transactions/${username}`);
         setTransactions(res.data);
       } catch (err) {
         console.error(err);
@@ -20,7 +21,7 @@ const TransactionHistoryPage = () => {
     };
 
     fetchTransactions();
-  }, [username]);
+  }, [username, transactionURL]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">

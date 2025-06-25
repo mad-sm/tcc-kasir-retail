@@ -3,6 +3,8 @@ import axios from 'axios';
 
 const CheckoutPage = ({ cart, username }) => {
   const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const baseUrl = process.env.REACT_APP_TRANSACTION_URL;
+
 
   const handleCheckout = async () => {
     // Format ulang cart ke bentuk 'items'
@@ -14,12 +16,12 @@ const CheckoutPage = ({ cart, username }) => {
     }));
 
     try {
-      const res = await axios.post('http://localhost:5002/buy', {
+      const res = await axios.post(`${baseUrl}/buy`, {
         username,
         items,
         total
       });
-
+      
       if (res.data.status === 'success') {
         alert('Transaksi berhasil!');
         // Tambahkan reset keranjang di App.jsx jika mau

@@ -7,9 +7,12 @@ const EditUserPage = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('kasir');
   const navigate = useNavigate();
+  const baseUrl = process.env.REACT_APP_AUTH_URL;
+
+
 
   useEffect(() => {
-    axios.get('http://localhost:5000/users')
+    axios.get(`${baseUrl}/users`)
       .then(res => {
         const user = res.data.find(u => u.username === username);
         if (user) {
@@ -23,7 +26,7 @@ const EditUserPage = () => {
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(`http://localhost:5000/users/${username}`, {
+      const res = await axios.put(`${baseUrl}/users/${username}`, {
         password,
         role
       });
@@ -43,7 +46,7 @@ const EditUserPage = () => {
     if (!window.confirm(`Yakin ingin menghapus user "${username}"?`)) return;
 
     try {
-      const res = await axios.delete(`http://localhost:5000/users/${username}`);
+      const res = await axios.delete(`${baseUrl}/users/${username}`);
       if (res.data.status === 'success') {
         alert('🗑️ User berhasil dihapus!');
         navigate('/admin/user');

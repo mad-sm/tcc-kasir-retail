@@ -6,13 +6,15 @@ const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const baseUrl = process.env.REACT_APP_AUTH_URL;
+
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/login', {
+      const res = await axios.post(`${baseUrl}/login`, {
         username,
         password,
-      });
+      });      
 
       if (res.data.status === 'success') {
         localStorage.setItem('username', res.data.username);
