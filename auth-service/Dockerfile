@@ -6,7 +6,7 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Ini sangat penting agar folder /app/db bisa ditulis
-RUN chmod -R 777 /app/db
+RUN [ -d /app/db ] && chmod -R 777 /app/db || echo "No /app/db found, skipping"
 
 EXPOSE 5000
 CMD ["python", "app.py"]
