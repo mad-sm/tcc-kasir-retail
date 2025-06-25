@@ -1,0 +1,30 @@
+steps:
+  # Build & push auth-service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/auth-service', './auth-service']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/auth-service']
+
+  # Build & push product-service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/product-service', './product-service']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/product-service']
+
+  # Build & push transaction-service
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/transaction-service', './transaction-service']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/transaction-service']
+
+  # Build & push frontend
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend', './frontend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/frontend']
+
+images:
+  - 'gcr.io/$PROJECT_ID/auth-service'
+  - 'gcr.io/$PROJECT_ID/product-service'
+  - 'gcr.io/$PROJECT_ID/transaction-service'
+  - 'gcr.io/$PROJECT_ID/frontend'
